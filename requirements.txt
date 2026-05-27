@@ -1,6 +1,6 @@
 langgraph
 litellm
 selenium
-webdriver_manager
+undetected-chromedriver
 colorama
 python-dotenv

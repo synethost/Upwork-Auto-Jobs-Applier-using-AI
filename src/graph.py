@@ -70,6 +70,11 @@ class UpworkAutomationGraph:
         """
         print(Fore.YELLOW + "----- Classifying scraped jobs -----\n" + Style.RESET_ALL)
         scraped_jobs = state["scraped_jobs_list"]
+
+        if not scraped_jobs.strip():
+            print(Fore.RED + "No jobs scraped — skipping classification.\n" + Style.RESET_ALL)
+            return {**state, "matches": []}
+
         classify_result = self.classify_jobs_agent.invoke(scraped_jobs)
 
         # Clean up the response - remove markdown code blocks if present
