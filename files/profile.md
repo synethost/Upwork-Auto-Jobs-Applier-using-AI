@@ -1,197 +1,121 @@
 ### Profile Overview:
-Senior AI & Full-Stack Engineer with 17 years building cutting-edge products for Microsoft, Home Depot, Audi, Indeed, J.P. Morgan Chase, Verizon, Grammarly, OpenAI, and Samsung.
+Founder of Synethost — a managed IT security and compliance company serving healthcare practices, law firms, and regulated SMBs. I build the systems I sell: compliance automation pipelines, HIPAA-compliant web infrastructure, AI-powered workflow tools, and Zero Trust security architecture.
 
 **SPECIALIZATIONS:**
-- AI Agent Development (LangChain, GPT-4, RAG architectures)
-- VR/AR Experiences (Unity 3D, spatial computing, hand tracking)
-- Full-Stack Applications (React, Next.js, Python, FastAPI, AWS/GCP)
-- Voice AI & Conversational Interfaces
-- UX Leadership & Product Strategy
+- Cybersecurity & Compliance Automation (HIPAA, SOC 2, CMMC, GDPR)
+- AI Agent Development & Workflow Automation (n8n, LangChain, LLM APIs)
+- HIPAA-Compliant Web Development (hardened infrastructure, ADA-accessible)
+- Managed Security Architecture (MDR, Zero Trust, EDR, SIEM)
+- Regulated Industry IT Consulting (healthcare, legal, financial)
 
 **PROVEN IMPACT:**
-- Led $20B personalized rewards platform strategy at Home Depot
-- Drove $9.3M revenue increase through design optimization at Indeed
-- Launched products that acquired 720,000+ users in first year (Connectful)
-- Built AI-powered conversational systems for Microsoft
-- Directed 5,000+ MAU car subscription service for Audi
-- Secured $1.2M funding for EDF Energy through strategic product design
+- Founded and built Synethost — end-to-end managed IT security platform for SMBs
+- Built compliance automation pipelines covering HIPAA, SOC 2, CMMC, and GDPR
+- Delivered HIPAA-compliant web builds for regulated healthcare and legal clients
+- Designed workflow automation products reducing manual compliance effort by hours per week
+- Built AI-powered threat detection and response workflows integrated into client environments
+- Serve SMBs ranging from 10 to 250 users across healthcare, legal, and finance verticals
 
-**UPWORK TRACK RECORD:**
-- 59 completed jobs on Upwork
-- 2,180 hours delivered
+**UPWORK AVAILABILITY:**
 - $85/hr rate
 - 30+ hrs/week availability
-- Multiple 5-star ratings from enterprise clients
+- Immediate start (within 24–48 hours)
+- Responsive communication (typically within 1 hour, US business hours)
 
 ### Technical Skills:
 
-**AI/ML Technologies:**
-- AI Development | Machine Learning | LangChain | TensorFlow | PyTorch
-- GPT/LLM Integration | Natural Language Processing
-- AI Agents | Conversational AI | Voice AI
-- RAG Architectures | Vector Databases | Embeddings
-- Prompt Engineering | Fine-tuning | Model Optimization
+**Cybersecurity & Compliance:**
+- HIPAA | SOC 2 | CMMC | GDPR | ADA Accessibility
+- Compliance Automation | Evidence Generation | Audit Readiness
+- Zero Trust Network Access | Endpoint Detection & Response (EDR)
+- SIEM & SOC Operations | Threat Detection & Response (MDR)
+- Email Security | DNS Filtering | Phishing Protection
+- Security Architecture | vCISO Advisory
+
+**AI & Automation:**
+- AI Agent Development | LangChain | LLM APIs (OpenAI, Anthropic)
+- Workflow Automation | n8n | Zapier | Custom Pipeline Development
+- RAG Architectures | Vector Databases | Prompt Engineering
+- Conversational AI | Chatbots | Context-Aware Automation
+- AI-Powered Threat Detection | Anomaly Detection
+
+**Web Development:**
+- HIPAA-Compliant Web Architecture | Hardened Infrastructure
+- React | Next.js | Node.js | Python | FastAPI
+- ADA-Accessible Design | Responsive Web Development
+- Secure Authentication (OAuth, SSO, JWT, MFA)
+- PostgreSQL | MongoDB | Redis | AWS | GCP
+- Docker | CI/CD | API Development
 
 **Programming Languages:**
 - Python | JavaScript | TypeScript | Node.js
 
-**Frontend Development:**
-- React | Next.js | Vue.js
-- Full Stack Development
-- Responsive Design | Progressive Web Apps
-- State Management (Redux, Zustand) | Server Components
+### About Synethost:
 
-**VR/AR Technologies:**
-- Virtual Reality | Augmented Reality | Unity 3D
-- Spatial Computing | Mixed Reality
-- Hand Tracking | Haptic Feedback
-- WebXR | AR Kit | AR Core
+**What I Built:**
+Synethost is a managed IT security and compliance platform I founded to solve a specific problem: regulated SMBs (healthcare, legal, finance) need enterprise-grade security and compliance, but can't afford enterprise IT teams. I built the product, the compliance automation engine, the client intake workflows, and the HIPAA-compliant web infrastructure that underpins it.
 
-**Backend & Cloud:**
-- FastAPI | Django | Flask
-- AWS (Lambda, EC2, S3, DynamoDB, SageMaker) | Google Cloud Platform
-- Cloud Architecture | Scalable Systems | API Development
-- PostgreSQL | MongoDB | Redis | Pinecone
-- Docker | Kubernetes | CI/CD
+**Shield (Managed IT Security)**
+- 24/7 MDR threat detection and response
+- Compliance automation covering HIPAA, SOC 2, CMMC, GDPR
+- Zero Trust architecture with EDR, DNS filtering, and email security
+- Dedicated account team model serving 10–100 user organizations
 
-**Mobile Development:**
-- React Native | iOS Development | Android Development
-- Cross-platform Development | Mobile UI/UX
+**Flow (Workflow Automation)**
+- Client intake and approval workflow automation
+- Compliance evidence generation pipelines
+- Custom n8n and LLM-powered automation for regulated businesses
 
-**Design & UX:**
-- UX Design | UX Research | Experience Architecture
-- User Experience Strategy | Design Leadership
-- Figma | Adobe Suite | Webflow
-- Prototyping | Design Systems | Information Architecture
-
-### Career Highlights:
-
-**Microsoft | Design Manager**
-- Led cross-functional teams developing AI-powered conversational interfaces and voice experiences
-- Designed autonomous AI systems for customer engagement and support automation
-- Drove strategic UX initiatives that improved product adoption and user satisfaction metrics
-- Collaborated with engineering teams on scalable, cloud-based AI/ML solutions
-- Implemented design systems used across multiple product lines
-
-**The Home Depot | Design Leader**
-- Led North Star strategy for $20B personalized rewards platform with C-level leadership
-- Directed AI, voice, and customer experience projects across digital touchpoints
-- Mentored global design teams and led Friends of Figma - Austin community group
-- Implemented data-driven design systems that improved conversion rates
-- Collaborated with engineering on scalable cloud architecture serving millions of users
-
-**Indeed | Product Designer**
-- Drove $9.3M revenue increase through strategic design optimization and A/B testing
-- Implemented experimentation frameworks that improved job seeker conversion rates
-- Designed job search algorithms and ML-powered matching systems
-- Collaborated directly with data science teams on machine learning features
-- Optimized user flows that increased employer engagement by 40%
-
-**Connectful | Product Lead & Full-Stack Developer**
-- Launched social media management platform that acquired 720,000+ users in year one
-- Built full-stack application using React, Node.js, and AWS cloud infrastructure
-- Designed and implemented scalable architecture supporting rapid user growth
-- Led cross-functional team of 8 engineers and designers through hyper-growth phase
-- Integrated with multiple social media APIs (Facebook, Twitter, Instagram, LinkedIn)
-
-**Audi | UX/Product Designer**
-- Directed car subscription service achieving 5,000+ monthly active users
-- Designed end-to-end user experience for automotive e-commerce platform
-- Implemented real-time vehicle availability and reservation systems
-- Collaborated with German headquarters on global product strategy and rollout
-- Created responsive mobile-first experiences for iOS and Android
-
-**EDF Energy | Product Strategist**
-- Launched pilot program for universal EV charging infrastructure
-- Secured $1.2M in funding through compelling product strategy and design
-- Conducted user research during COVID-19 pivot, informing product direction
-- Designed mobile app experience for EV charging station discovery and payment
-
-**Other Notable Clients:**
-- **J.P. Morgan Chase:** Financial product UX optimization and design system development
-- **Verizon:** Mobile app development and customer experience design
-- **Grammarly:** AI writing assistant interface improvements and user flow optimization
-- **OpenAI:** Product design consulting and AI/UX integration strategy
-- **Samsung:** Mobile device experience design and interaction patterns
-- **Orange Theory Fitness:** Conducted pivotal discovery research during COVID-19 lockdowns
+**Sites (HIPAA-Compliant Web)**
+- HIPAA-compliant, ADA-accessible website builds
+- Hardened infrastructure for healthcare practices, law firms, and regulated SMBs
+- Fixed-price builds starting at $1,800
 
 ### Key Project Examples:
 
-**AI Agent Development:**
-- Built autonomous customer support systems using LangChain and GPT-4 that reduced support tickets by 80%
-- Implemented RAG architectures with vector databases (Pinecone, Chroma) processing 10,000+ daily queries
-- Developed voice-enabled AI assistants for enterprise applications with natural language understanding
-- Created conversational AI chatbots with context-aware responses and function calling
-- Integrated AI systems with existing CRMs, databases, and business workflows
+**Compliance Automation:**
+- Built end-to-end HIPAA compliance automation pipelines generating audit-ready evidence
+- Implemented SOC 2, CMMC, and GDPR compliance frameworks for SMB clients
+- Designed compliance evidence collection workflows that run continuously without manual effort
+- Created client onboarding intake systems with automated compliance checks
 
-**VR/AR Applications:**
-- Designed immersive VR training simulations for enterprise clients including healthcare and automotive sectors
-- Built AR mobile applications with hand tracking, spatial mapping, and object recognition
-- Developed Unity 3D experiences with realistic physics, haptic feedback, and multiplayer networking
-- Created mixed reality solutions for retail product visualization and employee training
-- Implemented WebXR experiences accessible across devices without app installation
+**AI & Workflow Automation:**
+- Built AI-powered threat detection workflows integrated into MDR operations
+- Developed LLM-powered client communication and triage automation
+- Implemented n8n workflow pipelines connecting security tools, CRMs, and compliance systems
+- Created AI agents for internal IT operations — ticket routing, anomaly alerting, reporting
 
-**Full-Stack Platforms:**
-- Architected SaaS platforms serving millions of users (Connectful - 720K users, Home Depot - millions)
-- Built real-time applications with React, Next.js, FastAPI combining WebSockets and server-sent events
-- Implemented complex authentication systems (OAuth, SSO, JWT) with role-based access control
-- Integrated payment systems (Stripe, PayPal) with subscription management and billing
-- Deployed scalable cloud infrastructure on AWS and GCP with auto-scaling and load balancing
-- Optimized applications handling $20B+ in transaction volume with 99.9% uptime
+**HIPAA-Compliant Web Development:**
+- Delivered HIPAA-compliant websites for healthcare practices with hardened infrastructure
+- Built ADA-accessible, mobile-first web experiences for regulated industry clients
+- Implemented secure authentication, encrypted data handling, and audit logging
+- Deployed on hardened cloud infrastructure with auto-scaling and 99.9% uptime SLAs
 
-**Voice AI & Conversational Interfaces:**
-- Developed voice-enabled applications using speech-to-text and text-to-speech APIs
-- Created conversational flows with context management and multi-turn dialogues
-- Integrated with platforms like Alexa, Google Assistant, and custom voice interfaces
-- Built real-time voice processing systems with low-latency requirements
+**Security Architecture:**
+- Designed Zero Trust network access architectures for SMBs
+- Implemented EDR, SIEM, and SOC workflows for clients across healthcare and legal verticals
+- Built phishing protection, DNS filtering, and email security stacks
+- Conducted security assessments and produced remediation roadmaps for regulated clients
 
-**Technical Leadership:**
-- Led cross-functional teams of 10+ engineers, designers, and product managers
-- Established engineering best practices, code review processes, and CI/CD pipelines
-- Mentored junior developers and conducted technical interviews
-- Drove agile development with 2-week sprints, daily standups, and retrospectives
-- Created technical documentation, API specifications, and system architecture diagrams
+### What Makes Paul Stand Out:
 
-### What Makes Christopher Stand Out:
+**Operator, Not Just Consultant:**
+I don't just advise on compliance and security — I built a company around delivering it. Synethost runs the exact systems I'd build for a client: compliance automation, HIPAA-compliant infrastructure, AI-powered workflows, and Zero Trust security. When I take on a project, I'm drawing on what I've already proven in production.
 
-**Unique Combination:**
-I bring both technical depth (17 years coding in Python, JavaScript, React) AND design thinking (UX leadership at Microsoft, Home Depot). I don't just build features - I create products that users love and businesses profit from. Most developers understand code; I understand code AND customers.
+**Regulated Industry Depth:**
+I understand the specific constraints of healthcare, legal, and financial clients — HIPAA's technical safeguards, SOC 2's trust service criteria, CMMC's control domains. I've built systems that pass audits, not just systems that look good on paper.
 
-**Enterprise Experience:**
-I've worked directly with C-level leadership at Fortune 500 companies (Home Depot, J.P. Morgan Chase, Verizon). I understand business objectives, can communicate technical concepts to non-technical stakeholders, and deliver solutions that move revenue metrics, not just ship features.
+**Full-Stack Security + Development:**
+Most security consultants can't build the web app. Most web developers don't understand HIPAA's infrastructure requirements. I bridge both: I can architect the compliant infrastructure, build the application on top of it, and automate the compliance evidence collection — end to end.
 
-**Quantified Results:**
-Every project I've worked on has clear business impact:
-- $20B platform impact (Home Depot rewards system)
-- $9.3M revenue increase (Indeed optimization)
-- 720,000+ user acquisition (Connectful launch)
-- 5,000+ MAU (Audi subscription service)
-- $1.2M funding secured (EDF Energy)
-- 80% reduction in support tickets (AI automation)
-
-**Fast, Independent Execution:**
-With 59 completed Upwork jobs and 2,180 hours delivered, I've proven I can work independently, communicate proactively, and deliver production-ready solutions on time. I provide clean, well-documented code with comprehensive testing, not just "works on my machine" prototypes.
-
-**Real AI/VR Expertise:**
-While many developers claim AI/ML experience after taking a course, I've built production AI systems processing 10,000+ daily requests at Microsoft and multiple startups. My VR/AR work includes real hand tracking, haptic feedback, and spatial computing - not just basic 360-degree videos or simple Unity tutorials.
-
-**Immediate Availability:**
-- 30+ hours per week commitment
-- Can start on new projects within 24-48 hours
-- US Central Time Zone but flexible for global clients (worked with German teams at Audi)
-- Responsive communication (typically respond within 1 hour during business hours)
+**AI-Native Approach:**
+I integrate AI throughout my workflow automation work — LLM-powered triage, AI-assisted compliance monitoring, intelligent alerting. This isn't bolt-on AI; it's built into the tooling from the start.
 
 ### Availability & Logistics:
+- **Rate:** $85/hr
 - **Hours:** 30+ hours per week available
-- **Start Date:** Immediate start possible (can begin within 24-48 hours)
-- **Time Zone:** US Central Time (UTC-6), flexible for global collaboration
+- **Start Date:** Immediate start possible (within 24–48 hours)
+- **Time Zone:** US (flexible for global clients)
 - **Languages:** English (Native/Fluent)
 - **Work Style:** Independent, self-directed, proactive communication
-- **Response Time:** Typically within 1 hour during US business hours (9am-6pm CST)
-
-### Education & Certifications:
-- Bachelor's Degree in Computer Science / Design
-- AWS Certified Solutions Architect / Developer
-- Google Cloud Platform Certified Professional
-- AI/ML Certifications (Coursera, Stanford)
-- 17 years of continuous professional development and hands-on production experience
+- **Response Time:** Typically within 1 hour during US business hours

@@ -45,7 +45,7 @@ if __name__ == "__main__":
 
     # Job title to search for on Upwork
     # Change this to match optimal job types above
-    job_title = "AI Agent Developer"
+    job_title = "HIPAA compliance automation"
 
     # Load the updated freelancer profile
     profile = read_text_file("./files/profile.md")
