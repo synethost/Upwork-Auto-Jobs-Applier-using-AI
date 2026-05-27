@@ -51,7 +51,7 @@ def test_cover_letter_generation():
     print("\n2. Initializing AI agent...")
     agent = Agent(
         name="Cover Letter Generator",
-        model="gemini/gemini-2.0-flash-exp",
+        model="groq/llama-3.3-70b-versatile",
         system_prompt=generate_cover_letter_prompt.format(profile=profile),
         temperature=0.1
     )

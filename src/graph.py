@@ -158,14 +158,13 @@ class UpworkAutomationGraph:
         # llama3 with Groq will hit the TPM limit and throw an error
         self.classify_jobs_agent = Agent(
             name="Job Classifier Agent",
-            model="gemini/gemini-2.5-flash-preview-05-20",
+            model="groq/llama-3.3-70b-versatile",
             system_prompt=classify_jobs_prompt.format(profile=self.profile),
             temperature=0.1,
         )
         self.generate_cover_letter_agent = Agent(
             name="Writer Agent",
-            # model="groq/llama-3.1-70b-versatile",
-            model="gemini/gemini-2.5-flash-preview-05-20",
+            model="groq/llama-3.3-70b-versatile",
             system_prompt=generate_cover_letter_prompt.format(profile=self.profile),
             temperature=0.1
         )
