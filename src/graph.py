@@ -1,11 +1,14 @@
 import json
 import os
+import re
 import time
 from langgraph.graph import END, StateGraph
 from typing_extensions import TypedDict
 from typing import List
 from colorama import Fore, Style
 from .agent import Agent
+from .notifier import send_run_summary
+from .stats_tracker import record_run
 from .submitter import UpworkSubmitter
 from .utils import scrape_upwork_data, save_jobs_to_file
 from .prompts import classify_jobs_prompt, generate_cover_letter_prompt
@@ -39,11 +42,26 @@ def _mark_job_applied(link: str):
         json.dump(sorted(applied), f, indent=2)
 
 
+def _extract_title(job_text: str) -> str:
+    """Pull the title out of a scraped job string."""
+    for line in job_text.split('\n'):
+        if 'title' in line.lower():
+            return line.split(':', 1)[-1].strip().strip("'\"")[:70]
+    return job_text[:70]
+
+
 class UpworkAutomationGraph:
     def __init__(self, profile, num_jobs=10):
         self.profile = profile
         self.number_of_jobs = num_jobs
         self.submitter = None
+        self.review_mode = os.getenv("REVIEW_BEFORE_SUBMIT", "").lower() == "true"
+
+        # Per-run accumulators (reset in run())
+        self._run_job_title = ""
+        self._run_scraped_count = 0
+        self._run_applied: List[dict] = []
+
         self.init_agents()
         self.graph = self.build_graph()
 
@@ -63,6 +81,10 @@ class UpworkAutomationGraph:
                 ),
                 temperature=0.1,
             )
+
+    # ------------------------------------------------------------------
+    # Graph nodes
+    # ------------------------------------------------------------------
 
     def scrape_upwork_jobs(self, state):
         job_title = state["job_title"]
@@ -85,14 +107,14 @@ class UpworkAutomationGraph:
                 )
                 time.sleep(15)
 
+        self._run_scraped_count = len(job_listings)
         print(
             Fore.GREEN
             + f"----- Scraped {len(job_listings)} jobs -----\n"
             + Style.RESET_ALL
         )
         save_jobs_to_file(job_listings, SCRAPED_JOBS_FILE)
-        job_listings_str = "\n".join(map(str, job_listings))
-        return {**state, "scraped_jobs_list": job_listings_str}
+        return {**state, "scraped_jobs_list": "\n".join(map(str, job_listings))}
 
     def classify_scraped_jobs(self, state):
         print(Fore.YELLOW + "----- Classifying scraped jobs -----\n" + Style.RESET_ALL)
@@ -103,11 +125,8 @@ class UpworkAutomationGraph:
             return {**state, "matches": []}
 
         classify_result = self.classify_jobs_agent.invoke(scraped_jobs)
-
-        import re
         classify_result = re.sub(r'```json\s*', '', classify_result)
-        classify_result = re.sub(r'```\s*$', '', classify_result)
-        classify_result = classify_result.strip()
+        classify_result = re.sub(r'```\s*$', '', classify_result).strip()
 
         matches = json.loads(classify_result, strict=False)["matches"]
 
@@ -138,8 +157,7 @@ class UpworkAutomationGraph:
             + "----- Checking for remaining job matches -----\n"
             + Style.RESET_ALL
         )
-        count = len(state["matches"])
-        return {**state, "num_matchs": count}
+        return {**state, "num_matchs": len(state["matches"])}
 
     def need_to_process_matches(self, state):
         if len(state["matches"]) == 0:
@@ -163,45 +181,73 @@ class UpworkAutomationGraph:
         )
 
         cover_letter_result = self.generate_cover_letter_agent.invoke(job_input)
-
-        import re
         cover_letter_result = re.sub(r'```json\s*', '', cover_letter_result)
-        cover_letter_result = re.sub(r'```\s*$', '', cover_letter_result)
-        cover_letter_result = cover_letter_result.strip()
+        cover_letter_result = re.sub(r'```\s*$', '', cover_letter_result).strip()
 
         cover_letter = json.loads(cover_letter_result, strict=False)["letter"]
-        return {
-            **state,
-            "cover_letter": cover_letter,
-            "job_description": match['job'],
-        }
+        return {**state, "cover_letter": cover_letter, "job_description": match['job']}
 
     def save_cover_letter(self, state):
         print(Fore.YELLOW + "----- Saving cover letter -----\n" + Style.RESET_ALL)
         match = state["matches"][-1]
-
-        with open(COVER_LETTERS_FILE, "a") as file:
-            score = match.get('score', '?')
-            file.write(f"Score: {score}/10\n")
-            file.write(state["cover_letter"] + f'\n{"-" * 70}\n')
-
         link = match.get('link', '')
+        score = match.get('score', '?')
+
+        # Save to file
+        with open(COVER_LETTERS_FILE, "a") as f:
+            f.write(f"Score: {score}/10\n")
+            f.write(state["cover_letter"] + f'\n{"-" * 70}\n')
+
         if link:
             _mark_job_applied(link)
             print(Fore.CYAN + f"Marked as applied: {link}\n" + Style.RESET_ALL)
 
-        # Auto-submit if enabled
-        if self.submitter and link:
-            success = self.submitter.submit_proposal(
+        # Review/approval mode
+        submitted = False
+        should_submit = True
+
+        if self.review_mode and self.submitter:
+            print(Fore.BLUE + "=" * 60 + Style.RESET_ALL)
+            print(Fore.BLUE + "COVER LETTER PREVIEW:" + Style.RESET_ALL)
+            print(state["cover_letter"])
+            print(Fore.BLUE + "=" * 60 + Style.RESET_ALL)
+
+            answer = input(
+                Fore.YELLOW + "Submit this proposal? [y]es / [n]o / [q]uit auto-submit: " + Style.RESET_ALL
+            ).strip().lower()
+
+            if answer == 'q':
+                print(Fore.YELLOW + "Auto-submit disabled for remaining jobs.\n" + Style.RESET_ALL)
+                self.submitter = None
+                should_submit = False
+            elif answer != 'y':
+                print(Fore.YELLOW + "Skipped — letter saved locally.\n" + Style.RESET_ALL)
+                should_submit = False
+
+        # Auto-submit
+        if self.submitter and link and should_submit:
+            submitted = self.submitter.submit_proposal(
                 job_url=link,
                 cover_letter=state["cover_letter"],
                 job_description=match.get("job", ""),
             )
-            if not success:
+            if not submitted:
                 print(Fore.YELLOW + "Auto-submit failed — letter saved locally.\n" + Style.RESET_ALL)
+
+        # Accumulate stats for this run
+        self._run_applied.append({
+            "title": _extract_title(match.get("job", "")),
+            "link": link,
+            "score": score,
+            "submitted": submitted,
+        })
 
         state["matches"].pop()
         return {**state, "matches": state["matches"]}
+
+    # ------------------------------------------------------------------
+    # Agent / graph setup
+    # ------------------------------------------------------------------
 
     def init_agents(self):
         self.classify_jobs_agent = Agent(
@@ -239,12 +285,18 @@ class UpworkAutomationGraph:
 
         return graph.compile()
 
-    def run(self, job_title):
-        print(
-            Fore.BLUE + "----- Running Upwork Jobs Automation -----\n" + Style.RESET_ALL
-        )
+    # ------------------------------------------------------------------
+    # Entry point
+    # ------------------------------------------------------------------
 
-        # Login before graph runs so the browser session is ready for submissions
+    def run(self, job_title):
+        print(Fore.BLUE + "----- Running Upwork Jobs Automation -----\n" + Style.RESET_ALL)
+
+        # Reset per-run accumulators
+        self._run_job_title = job_title
+        self._run_scraped_count = 0
+        self._run_applied = []
+
         if self.submitter:
             if not self.submitter.login():
                 print(Fore.YELLOW + "Disabling auto-submit due to login failure.\n" + Style.RESET_ALL)
@@ -255,5 +307,25 @@ class UpworkAutomationGraph:
         finally:
             if self.submitter:
                 self.submitter.close()
+
+        # Record stats and send notification
+        record_run(
+            job_title=self._run_job_title,
+            scraped=self._run_scraped_count,
+            applied_jobs=self._run_applied,
+        )
+        send_run_summary(
+            job_title=self._run_job_title,
+            scraped=self._run_scraped_count,
+            applied_jobs=self._run_applied,
+        )
+
+        # Print run summary to terminal
+        if self._run_applied:
+            print(Fore.BLUE + f"\n----- Run complete: applied to {len(self._run_applied)} job(s) -----" + Style.RESET_ALL)
+            for j in self._run_applied:
+                sub = "submitted" if j["submitted"] else "saved locally"
+                print(Fore.CYAN + f"  [{j['score']}/10] {j['title'][:55]} ({sub})" + Style.RESET_ALL)
+            print()
 
         return state
