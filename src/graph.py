@@ -73,7 +73,7 @@ class UpworkAutomationGraph:
             )
             self.submitter.answer_agent = Agent(
                 name="Screening Answerer",
-                model="groq/llama-3.3-70b-versatile",
+                model="groq/meta-llama/llama-4-scout-17b-16e-instruct",
                 system_prompt=(
                     "You are Christopher, an expert AI and full-stack developer answering "
                     "screening questions for Upwork proposals. Be concise and professional.\n\n"
@@ -114,7 +114,14 @@ class UpworkAutomationGraph:
             + Style.RESET_ALL
         )
         save_jobs_to_file(job_listings, SCRAPED_JOBS_FILE)
-        return {**state, "scraped_jobs_list": "\n".join(map(str, job_listings))}
+        formatted = []
+        for job in job_listings:
+            formatted.append(
+                f"Title: {job['title']}\nLink: {job['link']}\n"
+                f"Description: {job['description']}\nJob Type: {job['job_type']}\n"
+                f"Experience Level: {job['experience_level']}\nBudget: {job['budget']}"
+            )
+        return {**state, "scraped_jobs_list": "\n---\n".join(formatted)}
 
     def classify_scraped_jobs(self, state):
         print(Fore.YELLOW + "----- Classifying scraped jobs -----\n" + Style.RESET_ALL)
@@ -124,11 +131,20 @@ class UpworkAutomationGraph:
             print(Fore.RED + "No jobs scraped — skipping classification.\n" + Style.RESET_ALL)
             return {**state, "matches": []}
 
-        classify_result = self.classify_jobs_agent.invoke(scraped_jobs)
-        classify_result = re.sub(r'```json\s*', '', classify_result)
-        classify_result = re.sub(r'```\s*$', '', classify_result).strip()
-
-        matches = json.loads(classify_result, strict=False)["matches"]
+        # Process one job at a time to stay under Groq's 6K token per-request limit
+        job_entries = [j.strip() for j in scraped_jobs.split("\n---\n") if j.strip()]
+        matches = []
+        for i, job in enumerate(job_entries):
+            print(Fore.CYAN + f"  Classifying job {i+1} of {len(job_entries)}..." + Style.RESET_ALL)
+            classify_result = self.classify_jobs_agent.invoke(job)
+            classify_result = re.sub(r'```json\s*', '', classify_result)
+            classify_result = re.sub(r'```\s*$', '', classify_result).strip()
+            try:
+                batch_matches = json.loads(classify_result, strict=False).get("matches", [])
+            except (json.JSONDecodeError, AttributeError):
+                print(Fore.YELLOW + f"  Warning: could not parse classifier response for job {i+1}, skipping." + Style.RESET_ALL)
+                batch_matches = []
+            matches.extend(batch_matches)
 
         # Remove already-applied jobs
         applied_jobs = _load_applied_jobs()
@@ -174,8 +190,10 @@ class UpworkAutomationGraph:
         print(Fore.YELLOW + "----- Generating cover letter -----\n" + Style.RESET_ALL)
         match = state["matches"][-1]
 
+        # Truncate job text to ~1500 chars to stay under the 6K token per-request limit
+        job_text = match['job'][:1500]
         job_input = (
-            f"JOB LISTING:\n{match['job']}\n\n"
+            f"JOB LISTING:\n{job_text}\n\n"
             f"MATCH SCORE: {match.get('score', 'N/A')}/10\n"
             f"WHY THIS IS A STRONG MATCH: {match.get('reason', '')}"
         )
@@ -184,7 +202,16 @@ class UpworkAutomationGraph:
         cover_letter_result = re.sub(r'```json\s*', '', cover_letter_result)
         cover_letter_result = re.sub(r'```\s*$', '', cover_letter_result).strip()
 
-        cover_letter = json.loads(cover_letter_result, strict=False)["letter"]
+        try:
+            cover_letter = json.loads(cover_letter_result, strict=False)["letter"]
+        except (json.JSONDecodeError, KeyError):
+            # Try extracting from <letter>...</letter> tags
+            letter_match = re.search(r'<letter>(.*?)</letter>', cover_letter_result, re.DOTALL)
+            if letter_match:
+                cover_letter = letter_match.group(1).strip()
+            else:
+                cover_letter = cover_letter_result
+
         return {**state, "cover_letter": cover_letter, "job_description": match['job']}
 
     def save_cover_letter(self, state):
@@ -252,15 +279,15 @@ class UpworkAutomationGraph:
     def init_agents(self):
         self.classify_jobs_agent = Agent(
             name="Job Classifier Agent",
-            model="groq/llama-3.3-70b-versatile",
+            model="groq/llama-3.1-8b-instant",
             system_prompt=classify_jobs_prompt.format(profile=self.profile),
             temperature=0.1,
         )
         self.generate_cover_letter_agent = Agent(
             name="Writer Agent",
-            model="groq/llama-3.3-70b-versatile",
+            model="groq/meta-llama/llama-4-scout-17b-16e-instruct",
             system_prompt=generate_cover_letter_prompt.format(profile=self.profile),
-            temperature=0.1,
+            temperature=0.4,
         )
 
     def build_graph(self):
@@ -303,7 +330,7 @@ class UpworkAutomationGraph:
                 self.submitter = None
 
         try:
-            state = self.graph.invoke({"job_title": job_title})
+            state = self.graph.invoke({"job_title": job_title}, config={"recursion_limit": 100})
         finally:
             if self.submitter:
                 self.submitter.close()
