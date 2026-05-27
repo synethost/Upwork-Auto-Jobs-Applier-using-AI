@@ -1,10 +1,12 @@
 import json
+import os
 import time
 from langgraph.graph import END, StateGraph
 from typing_extensions import TypedDict
 from typing import List
 from colorama import Fore, Style
 from .agent import Agent
+from .submitter import UpworkSubmitter
 from .utils import scrape_upwork_data, save_jobs_to_file
 from .prompts import classify_jobs_prompt, generate_cover_letter_prompt
 
@@ -41,8 +43,26 @@ class UpworkAutomationGraph:
     def __init__(self, profile, num_jobs=10):
         self.profile = profile
         self.number_of_jobs = num_jobs
+        self.submitter = None
         self.init_agents()
         self.graph = self.build_graph()
+
+        if os.getenv("AUTO_SUBMIT", "").lower() == "true":
+            self.submitter = UpworkSubmitter(
+                email=os.getenv("UPWORK_EMAIL", ""),
+                password=os.getenv("UPWORK_PASSWORD", ""),
+                hourly_rate=os.getenv("UPWORK_HOURLY_RATE", "85"),
+            )
+            self.submitter.answer_agent = Agent(
+                name="Screening Answerer",
+                model="groq/llama-3.3-70b-versatile",
+                system_prompt=(
+                    "You are Christopher, an expert AI and full-stack developer answering "
+                    "screening questions for Upwork proposals. Be concise and professional.\n\n"
+                    f"<profile>{self.profile}</profile>"
+                ),
+                temperature=0.1,
+            )
 
     def scrape_upwork_jobs(self, state):
         job_title = state["job_title"]
@@ -136,7 +156,6 @@ class UpworkAutomationGraph:
         print(Fore.YELLOW + "----- Generating cover letter -----\n" + Style.RESET_ALL)
         match = state["matches"][-1]
 
-        # Pass structured context so the agent can write a more targeted letter
         job_input = (
             f"JOB LISTING:\n{match['job']}\n\n"
             f"MATCH SCORE: {match.get('score', 'N/A')}/10\n"
@@ -166,11 +185,20 @@ class UpworkAutomationGraph:
             file.write(f"Score: {score}/10\n")
             file.write(state["cover_letter"] + f'\n{"-" * 70}\n')
 
-        # Mark as applied so it's skipped on future runs
         link = match.get('link', '')
         if link:
             _mark_job_applied(link)
             print(Fore.CYAN + f"Marked as applied: {link}\n" + Style.RESET_ALL)
+
+        # Auto-submit if enabled
+        if self.submitter and link:
+            success = self.submitter.submit_proposal(
+                job_url=link,
+                cover_letter=state["cover_letter"],
+                job_description=match.get("job", ""),
+            )
+            if not success:
+                print(Fore.YELLOW + "Auto-submit failed — letter saved locally.\n" + Style.RESET_ALL)
 
         state["matches"].pop()
         return {**state, "matches": state["matches"]}
@@ -215,5 +243,17 @@ class UpworkAutomationGraph:
         print(
             Fore.BLUE + "----- Running Upwork Jobs Automation -----\n" + Style.RESET_ALL
         )
-        state = self.graph.invoke({"job_title": job_title})
+
+        # Login before graph runs so the browser session is ready for submissions
+        if self.submitter:
+            if not self.submitter.login():
+                print(Fore.YELLOW + "Disabling auto-submit due to login failure.\n" + Style.RESET_ALL)
+                self.submitter = None
+
+        try:
+            state = self.graph.invoke({"job_title": job_title})
+        finally:
+            if self.submitter:
+                self.submitter.close()
+
         return state
