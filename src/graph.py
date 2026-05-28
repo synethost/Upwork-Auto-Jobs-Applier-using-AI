@@ -134,7 +134,17 @@ class UpworkAutomationGraph:
         # Process one job at a time to stay under Groq's 6K token per-request limit
         job_entries = [j.strip() for j in scraped_jobs.split("\n---\n") if j.strip()]
         matches = []
+        applied_jobs = _load_applied_jobs()
+
         for i, job in enumerate(job_entries):
+            # Extract link to check if already applied
+            link_match = re.search(r'Link:\s*([^\s\n]+)', job)
+            link = link_match.group(1).strip() if link_match else ""
+
+            if link and link in applied_jobs:
+                print(Fore.CYAN + f"  Skipping job {i+1} of {len(job_entries)} (already applied: {link})" + Style.RESET_ALL)
+                continue
+
             print(Fore.CYAN + f"  Classifying job {i+1} of {len(job_entries)}..." + Style.RESET_ALL)
             classify_result = self.classify_jobs_agent.invoke(job)
             classify_result = re.sub(r'```json\s*', '', classify_result)
@@ -146,8 +156,7 @@ class UpworkAutomationGraph:
                 batch_matches = []
             matches.extend(batch_matches)
 
-        # Remove already-applied jobs
-        applied_jobs = _load_applied_jobs()
+        # Remove already-applied jobs (just in case LLM response returned anything else)
         before = len(matches)
         matches = [m for m in matches if m.get('link', '') not in applied_jobs]
         skipped = before - len(matches)
